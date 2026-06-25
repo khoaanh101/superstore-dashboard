@@ -3,10 +3,10 @@
 ## Dự án tập trung vào xây dựng và triển khai Dashboard từ một hệ thống quản trị cơ bản, phục vụ cho phân tích chuyên sâu trong vận hành siêu thị.
 
 ## Mục tiêu
-* ** Tự triển khai hệ thống quản trị cơ bản (Đăng nhập/ Đăng xuất).
-* ** Làm việc với hệ quản trị cơ sở dữ liêu quan hệ (PostgreSQL).
-* ** Viết API truy vấn tích hợp tính toán (Aggregation) tối ưu.
-* ** Xây dựng màn hình hiện thị báo cáo dạng biểu đồ trực quan (Dashboard).
+* **Tự triển khai hệ thống quản trị cơ bản (Đăng nhập/ Đăng xuất).**
+* **Làm việc với hệ quản trị cơ sở dữ liêu quan hệ (PostgreSQL).**
+* **Viết API truy vấn tích hợp tính toán (Aggregation) tối ưu.**
+* **Xây dựng màn hình hiện thị báo cáo dạng biểu đồ trực quan (Dashboard).**
 
 ## Chi tiết
 
