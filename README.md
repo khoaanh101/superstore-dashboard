@@ -17,8 +17,8 @@
 
 ### 2. Backend API
 * Bảng users phục vụ tính năng Auth (mã hóa trường mật khẩu).
-* API Auth bao gồm: API login (xác thực tài khoản, trả về JWT Token), API logout (vô hiệu hóa tài khoản, xóa cookie hoặc xóa session phía client)
-* API Reports lấy dữ liệu để vẽ biểu đồ
+* API Auth bao gồm: API login (xác thực tài khoản, trả về JWT Token), API logout (vô hiệu hóa tài khoản, xóa cookie/xóa session phía client).
+* API Reports lấy dữ liệu để vẽ biểu đồ.
 
 
 ## 3. Frontend UI & tích hợp
