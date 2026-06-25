@@ -23,7 +23,9 @@
 
 ## 3. Frontend UI & tích hợp
 * Màn hình Login: Hiển thị giao diện nhập email/password (thông báo lỗi nếu sai thông tin đăng nhập, không cho phép vào trang Dashboard bằng URL).
-* Màn hình Dashboard: Hiển thị ba thẻ dữ liệu **Doanh thu - Lợi nhuận - Số đơn hàng**. Vẽ các biểu đồ đường, biểu đồ cột, biểu đồ tròn phục vụ báo cáo.
+* Màn hình Dashboard:
+  * Hiển thị ba thẻ dữ liệu **Doanh thu - Lợi nhuận - Số đơn hàng**.
+  * Vẽ các biểu đồ đường, biểu đồ cột, biểu đồ tròn phục vụ báo cáo.
 * Nút Logout: Xóa token khỏi bộ nhớ (LocalStorage/Cookie) và chuyển hướng về Màn hình Login.
 
 ---
