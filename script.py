@@ -17,6 +17,7 @@ DB_config = {
 }
 
 sql_file_path = os.path.join(os.path.dirname(__file__), "SQL queries")
+script_file_path = os.path.join(os.path.dirname(__file__))
 
 def get_connection():
     try:
@@ -95,9 +96,9 @@ def run_sql_file(filepath, params=None, fetch=False):
             print(f"Error executing SQL file '{filepath}': {e}")
             raise
 
-def run_setup():
-    print("\n=== Running init.sql (Creating table) ===")
-    run_sql_file(os.path.join(sql_file_path, "init.sql"), fetch=False)
+def run_setup(filename):
+    print(f"\n=== Running setup file: {filename} ===")
+    run_sql_file(os.path.join(script_file_path, filename), fetch=False)
 
 def run_report(filename):
     print(f"\n=== Running report: {filename} ===")
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     test_connection()
     tables = list_tables()
 
-run_report("percentage_per_segment.sql")
-run_report("profit_margin.sql")
-run_report("topregion.sql")
-run_report("total_sales_profit_revenue.sql")
+    run_setup("init.sql")
+    for e in os.scandir(sql_file_path):
+        with open(e.path, "r") as f:
+            run_report(e.name)
