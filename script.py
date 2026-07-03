@@ -14,7 +14,7 @@ script_file_path = os.path.join(os.path.dirname(__file__))
 class DatabaseConfig:
     def __init__(self):
         self.host = os.environ.get("PG_HOST", "localhost")
-        self.port = os.environ.get("PG_PORT", "5422")
+        self.port = os.environ.get("PG_PORT", "5432")
         self.dbname = os.environ.get("PG_DATABASE", "supermarket_sales")
         self.user = os.environ.get("PG_USER", "postgres")
         self.password = os.environ.get("PG_PASSWORD", "")
