@@ -6,6 +6,25 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 ---
 
+## Dashboard Login
+
+<p align="center">
+    <img src="img/login.png" alt="Login Page" width="800"/>
+</p>
+
+---
+
+## Dashboard
+
+<p align="center">
+    <img src="img/dashboard-main.png>" alt="Dashboard Overview" width="800"/>
+</p>
+
+<p align="center">
+    <img src="img/dashboard-main_.png>" alt="Data Table (Manifest)" width="800"/>
+
+---
+
 ## Features
 
 - **JWT Authentication** — Login, Register, and Logout with access token + refresh token rotation
