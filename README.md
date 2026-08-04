@@ -235,3 +235,10 @@ Full interactive docs available at `http://localhost:8000/docs`.
 | `REFRESH_TOKEN_EXPIRES_DAYS` | ❌ | `7` | Refresh token lifetime |
 | `CORS_ORIGINS` | ❌ | `*` | Comma-separated allowed origins |
 | `DEBUG` | ❌ | `false` | Enable FastAPI debug mode |
+
+---
+
+## License
+
+This project is licensed under the terms of the MIT license.
+
