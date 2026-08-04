@@ -22,6 +22,7 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 <p align="center">
     <img src="img/dashboard-main_.png>" alt="Data Table (Manifest)" width="800"/>
+</p>
 
 ---
 
