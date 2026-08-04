@@ -8,21 +8,15 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 ## Dashboard Login
 
-<p align="center">
-    <img src="img/login.png" alt="Login Page" width="800"/>
-</p>
+![Dashboard login screenshot](img/login.png)(https://github.com/khoaanh101/superstore-dashboard)
 
 ---
 
 ## Dashboard
 
-<p align="center">
-    <img src="img/dashboard-main.png>" alt="Dashboard Overview" width="800"/>
-</p>
+![Dashboard overview screenshot](img/dashboard-main.png)(https://github.com/khoaanh101/superstore-dashboard)
 
-<p align="center">
-    <img src="img/dashboard-main_.png>" alt="Data Table (Manifest)" width="800"/>
-</p>
+![Dashboard data table screenshot](img/dashboard-main_.png)(https://github.com/khoaanh101/superstore-dashboard)
 
 ---
 
