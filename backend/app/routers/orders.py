@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import logging
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
@@ -7,11 +9,13 @@ from app.models import SuperstoreSale, User
 from app.schemas import SaleCreate, SaleRead, SaleUpdate
 
 router = APIRouter(prefix="/orders", tags=["orders"])
+logger = logging.getLogger("system")
 
 
 @router.post("", response_model=SaleRead, status_code=status.HTTP_201_CREATED)
 async def create_order(
     payload: SaleCreate,
+    request: Request,
     session: AsyncSession = Depends(get_session),
     _admin: User = Depends(require_admin),
 ) -> SuperstoreSale:
@@ -20,6 +24,16 @@ async def create_order(
     session.add(sale)
     await session.commit()
     await session.refresh(sale)
+
+    logger.info(
+        "Order created: id=%d  city=%s  category=%s  sales=%.2f  by=%s  ip=%s",
+        sale.id,
+        sale.city,
+        sale.category,
+        float(sale.sales),
+        _admin.email,
+        _ip(request),
+    )
     return sale
 
 
@@ -27,12 +41,19 @@ async def create_order(
 async def update_order(
     order_id: int,
     payload: SaleUpdate,
+    request: Request,
     session: AsyncSession = Depends(get_session),
     _admin: User = Depends(require_admin),
 ) -> SuperstoreSale:
     """Update an existing sale order (partial update). Admin only."""
     sale = await session.get(SuperstoreSale, order_id)
     if sale is None:
+        logger.warning(
+            "Order update failed — not found: id=%d  by=%s  ip=%s",
+            order_id,
+            _admin.email,
+            _ip(request),
+        )
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
 
     # Apply only the fields that were explicitly set in the request body
@@ -42,19 +63,53 @@ async def update_order(
 
     await session.commit()
     await session.refresh(sale)
+
+    logger.info(
+        "Order updated: id=%d  fields=%s  by=%s  ip=%s",
+        sale.id,
+        list(update_data.keys()),
+        _admin.email,
+        _ip(request),
+    )
     return sale
 
 
 @router.delete("/{order_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_order(
     order_id: int,
+    request: Request,
     session: AsyncSession = Depends(get_session),
     _admin: User = Depends(require_admin),
 ) -> None:
     """Delete a sale order. Admin only."""
     sale = await session.get(SuperstoreSale, order_id)
     if sale is None:
+        logger.warning(
+            "Order delete failed — not found: id=%d  by=%s  ip=%s",
+            order_id,
+            _admin.email,
+            _ip(request),
+        )
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
 
     await session.delete(sale)
     await session.commit()
+
+    logger.info(
+        "Order deleted: id=%d  city=%s  category=%s  by=%s  ip=%s",
+        order_id,
+        sale.city,
+        sale.category,
+        _admin.email,
+        _ip(request),
+    )
+
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+def _ip(request: Request) -> str:
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    if request.client:
+        return request.client.host
+    return "-"
