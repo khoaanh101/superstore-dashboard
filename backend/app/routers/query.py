@@ -126,7 +126,7 @@ async def list_rows(
     total: int = (await session.execute(count_stmt)).scalar_one()
 
     # Paginated rows
-    rows_stmt = base_stmt.offset(offset).limit(limit)
+    rows_stmt = base_stmt.order_by(SuperstoreSale.id.asc()).offset(offset).limit(limit)
     result = await session.execute(rows_stmt)
     rows = result.scalars().all()
 

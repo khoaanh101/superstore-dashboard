@@ -25,7 +25,7 @@ settings = get_settings()
 async def _issue_tokens(user: User, session: AsyncSession) -> Token:
     """Create a new access token + refresh token pair, storing the refresh
     token's hash in the DB so it can be looked up and revoked later."""
-    access_token = create_access_token(subject=user.email)
+    access_token = create_access_token(subject=user.email, role=user.role)
 
     raw_refresh_token = generate_refresh_token()
     db_refresh_token = RefreshToken(

@@ -1,0 +1,167 @@
+/* ================================================
+   table.css — Manifest table, filters, pagination, action buttons
+   ================================================ */
+
+/* ---- Table card shell ---- */
+.table-card { padding: 0; margin-top: 4px; }
+
+.table-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 22px 0;
+}
+
+.table-card-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* ---- Table filters (category + region dropdowns) ---- */
+.filters { display: flex; gap: 10px; }
+
+.filters select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.filters select:focus { outline: none; border-color: var(--accent); }
+
+/* ---- Add Order button ---- */
+.btn-add-order {
+  background: var(--ink) !important;
+  color: #fff;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-add-order:hover { background: #373E53 !important; }
+
+/* ---- Scrollable table wrapper ---- */
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Manifest table ---- */
+.manifest {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.manifest thead th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.manifest thead th.num { text-align: right; }
+
+.manifest tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.manifest tbody tr:hover { background: #FBF9F5; }
+
+/* ---- Pagination loading state — fade in-place, no layout shift ---- */
+.manifest tbody { transition: opacity 0.15s ease; }
+.manifest tbody.is-loading { opacity: 0.35; pointer-events: none; }
+
+.manifest td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.manifest td.profit-pos { color: var(--profit-pos); }
+.manifest td.profit-neg { color: var(--profit-neg); }
+
+.empty-row {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 26px 14px !important;
+}
+
+/* ---- Skeleton rows (table body) ---- */
+.skeleton-row td { background: transparent; }
+.skeleton-row .skeleton-cell {
+  display: block;
+  height: 14px;
+  background: var(--border);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  width: 80%;
+}
+
+/* ---- Action cell (Edit / Delete) ---- */
+.col-actions { text-align: center; }
+
+.manifest td.action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn-edit, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+
+.btn-edit {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--border);
+  margin-right: 4px;
+}
+.btn-edit:hover { background: #EEF2FF; color: #3B5BDB; border-color: #3B5BDB; }
+
+.btn-delete {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--border);
+}
+.btn-delete:hover { background: #FFF0F0; color: var(--profit-neg); border-color: var(--profit-neg); }
+
+/* ---- Pagination footer ---- */
+.table-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px 20px;
+}
+
+.page-indicator { font-size: 12px; color: var(--ink-soft); }
+
+.pager { display: flex; gap: 8px; }
+
+.pager button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  padding: 8px 12px;
+  font-size: 12.5px;
+}
+.pager button:hover { background: var(--surface); border-color: var(--ink-soft); }
+.pager button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pager button:disabled:hover { background: transparent; border-color: var(--border); }

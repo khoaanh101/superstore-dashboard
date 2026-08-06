@@ -34,3 +34,13 @@ async def get_current_user(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
 
     return user
+
+
+async def require_admin(current_user: User = Depends(get_current_user)) -> User:
+    """Dependency that allows only admin users. Raises 403 for viewers."""
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin role required",
+        )
+    return current_user

@@ -20,20 +20,25 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     password_bytes = plain_password.encode("utf-8")[:72]
     return bcrypt.checkpw(password_bytes, hashed_password.encode("utf-8"))
 
-def create_access_token(subject: str, expires_minutes: int | None = None) -> str:
+def create_access_token(subject: str, role: str = "viewer", expires_minutes: int | None = None) -> str:
     """Create a signed JWT. `subject` is typically the user's email or id."""
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=expires_minutes if expires_minutes is not None else settings.jwt_expires_minutes
     )
-    to_encode = {"sub": subject, "exp": expire}
+    to_encode = {"sub": subject, "role": role, "exp": expire}
     return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
 def decode_access_token(token: str) -> str | None:
     """Return the subject (email) encoded in the token, or None if invalid/expired."""
+    payload = decode_access_token_full(token)
+    return payload.get("sub") if payload else None
+
+
+def decode_access_token_full(token: str) -> dict | None:
+    """Return the full JWT payload dict, or None if invalid/expired."""
     try:
-        payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
-        return payload.get("sub")
+        return jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
     except jwt.PyJWTError:
         return None
 

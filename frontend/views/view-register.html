@@ -1,0 +1,20 @@
+<!-- ============ REGISTER VIEW ============ -->
+<section id="view-register" class="view login-view" hidden>
+  <div class="brand-panel">
+    <h1>Superstore<br />Sales Dashboard</h1>
+    <p>Revenue, Profit and Customer Class — Collected from Sales Data.</p>
+  </div>
+
+  <div class="form-panel">
+    <form id="register-form">
+      <h2>Register</h2>
+      <input type="email" id="register-email" placeholder="example@email.com" autocomplete="email" required />
+      <input type="password" id="register-password" placeholder="Password (min 8 characters)"
+        autocomplete="new-password" required minlength="8" />
+      <p class="error" id="register-error" hidden></p>
+      <p class="success" id="register-success" hidden></p>
+      <button type="submit" id="register-submit">Register</button>
+      <p class="switch-link">Already have an account? <a href="#" id="show-login">Log in</a></p>
+    </form>
+  </div>
+</section>

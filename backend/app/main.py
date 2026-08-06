@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 
 from app.config import get_settings
 from app.dependencies import get_current_user
-from app.routers import chart, query, auth
+from app.routers import auth, chart, orders, query
 
 settings = get_settings()
 
@@ -49,6 +49,8 @@ async def serve_frontend(path: str) -> FileResponse:
 app.include_router(auth.router)
 app.include_router(chart.router, dependencies=[Depends(get_current_user)])
 app.include_router(query.router, dependencies=[Depends(get_current_user)])
+# Orders router: auth is enforced inside each endpoint via require_admin
+app.include_router(orders.router)
 
 
 @app.get("/health", tags=["health"])

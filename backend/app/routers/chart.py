@@ -16,6 +16,7 @@ _CHART_CONFIG: dict[ChartType, tuple] = {
     ChartType.SALES_BY_REGION: (SuperstoreSale.region, SuperstoreSale.sales),
     ChartType.SALES_BY_SEGMENT: (SuperstoreSale.segment, SuperstoreSale.sales),
     ChartType.SALES_BY_STATE: (SuperstoreSale.state, SuperstoreSale.sales),
+    ChartType.SALES_BY_SHIP_MODE: (SuperstoreSale.ship_mode, SuperstoreSale.sales),
     ChartType.PROFIT_BY_SUBCATEGORY: (SuperstoreSale.sub_category, SuperstoreSale.profit),
     ChartType.PROFIT_BY_CATEGORY: (SuperstoreSale.category, SuperstoreSale.profit),
 }
@@ -32,6 +33,7 @@ async def get_chart(
     chart_type: ChartType = Query(..., title="Chart type"),
     limit: int = Query(20, ge=1, le=100, description="Max number of groups returned"),
     state: str | None = Query(default=None, description="Filter by exact state"),
+    city: str | None = Query(default=None, description="Filter by exact city"),
     region: str | None = Query(default=None, description="Filter by exact region"),
     category: str | None = Query(default=None, description="Filter by exact category"),
     segment: str | None = Query(default=None, description="Filter by exact segment"),
@@ -53,6 +55,7 @@ async def get_chart(
     # Apply optional filters (bound safely, never interpolated into raw SQL)
     filter_map = {
         SuperstoreSale.state: state,
+        SuperstoreSale.city: city,
         SuperstoreSale.region: region,
         SuperstoreSale.category: category,
         SuperstoreSale.segment: segment,

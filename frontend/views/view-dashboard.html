@@ -1,0 +1,152 @@
+<!-- ============ DASHBOARD VIEW ============ -->
+<section id="view-dashboard" class="view" hidden>
+  <header class="dash-header">
+    <div class="brand-mark">
+      <img src="/frontend/assets/favicon.png" alt="Superstore logo" class="brand-mark__icon" />
+      <div>
+        <p class="brand-mark__title">Superstore</p>
+        <p class="brand-mark__subtitle">Sales Dashboard</p>
+      </div>
+    </div>
+    <div class="user-bar">
+      <span id="topbar-user"></span>
+      <span id="role-badge" class="role-badge" hidden></span>
+      <button id="btn-refresh" class="btn-ghost">Refresh</button>
+      <button id="btn-logout">Log out</button>
+    </div>
+  </header>
+
+  <main class="dash-body">
+
+    <!-- KPI Cards -->
+    <section class="cards" id="summary-cards">
+      <!-- Total Sales card: enlarged with embedded donut chart -->
+      <div class="card card--sales-donut">
+        <div class="card-kpi-side">
+          <p class="card-label">Total Sales</p>
+          <p class="card-value" id="kpi-sales">—</p>
+          <p class="card-sublabel">by Region</p>
+        </div>
+        <div class="card-donut-side">
+          <canvas id="chart-region-donut"></canvas>
+        </div>
+        <ul class="donut-legend" id="donut-legend"></ul>
+      </div>
+      <div class="card">
+        <p class="card-label">Total Profit</p>
+        <p class="card-value" id="kpi-profit">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Orders</p>
+        <p class="card-value" id="kpi-orders">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Profit Margin</p>
+        <p class="card-value" id="kpi-margin">—</p>
+      </div>
+    </section>
+
+    <!-- Chart filters -->
+    <div class="chart-filter-bar">
+      <span class="chart-filter-label">Filter charts:</span>
+
+      <!-- Segmented toggle: State or City -->
+      <div class="filter-type-toggle" role="group" aria-label="Filter type">
+        <button type="button" id="toggle-filter-state" class="filter-toggle-btn is-active"
+          data-type="state">State</button>
+        <button type="button" id="toggle-filter-city" class="filter-toggle-btn" data-type="city">City</button>
+      </div>
+
+      <!-- Single dropdown — content swaps based on active toggle -->
+      <select id="chart-filter-value">
+        <option value="">All States</option>
+      </select>
+
+      <!-- Hidden data sources (never shown directly) -->
+      <select id="chart-filter-state" hidden aria-hidden="true">
+        <option value="">All States</option>
+      </select>
+      <select id="chart-filter-city" hidden aria-hidden="true">
+        <option value="">All Cities</option>
+      </select>
+
+      <button type="button" id="btn-reset-chart-filters" class="btn-ghost btn-sm">&#x21BA; Reset</button>
+    </div>
+
+    <!-- Charts grid -->
+    <section class="charts">
+      <div class="chart-box">
+        <p class="chart-title">Sales by Category</p>
+        <canvas id="chart-sales-category"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Sales by Ship Mode</p>
+        <canvas id="chart-sales-shipmode"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Sales by Segment</p>
+        <canvas id="chart-sales-segment"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Profit by Sub-Category</p>
+        <canvas id="chart-profit-subcategory"></canvas>
+      </div>
+    </section>
+
+    <!-- Manifest table -->
+    <section class="card table-card">
+      <div class="table-card-header">
+        <h2>Manifest</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button id="btn-add-order" class="btn-add-order" hidden>+ Add Order</button>
+          <div class="filters">
+            <select id="filter-category">
+              <option value="">All Categories</option>
+            </select>
+            <select id="filter-region">
+              <option value="">All Regions</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="manifest">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ship Mode</th>
+              <th>Segment</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Region</th>
+              <th>Category</th>
+              <th>Sub-Category</th>
+              <th class="num">Sales</th>
+              <th class="num">Qty</th>
+              <th class="num">Discount</th>
+              <th class="num">Profit</th>
+              <th id="col-actions" class="col-actions" hidden>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="manifest-body">
+            <tr>
+              <td colspan="12" class="empty-row">Loading…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-card-footer">
+        <span id="page-indicator" class="page-indicator"></span>
+        <div class="pager">
+          <button type="button" id="btn-first" title="First page">⇤ First</button>
+          <button type="button" id="btn-prev">← Prev</button>
+          <button type="button" id="btn-next">Next →</button>
+          <button type="button" id="btn-last" title="Last page">Last ⇥</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</section>
