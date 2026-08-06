@@ -119,10 +119,19 @@ function init() {
   document.getElementById("btn-logout").addEventListener("click", handleLogout);
 
   /* Topbar Refresh */
-  document.getElementById("btn-refresh").addEventListener("click", () => {
-    loadKpis().catch(() => { });
-    loadCharts().catch(() => { });
-    loadManifestPage().catch(() => { });
+  document.getElementById("btn-refresh").addEventListener("click", async () => {
+    try {
+      await Promise.all([
+        loadKpis(),
+        loadCharts(),
+        loadRegionDonut(),
+        loadManifestPage(),
+        populateStateFilter(),
+        populateCityFilter(),
+        populateFilterOptions(),
+      ]);
+      syncFilterDropdown(chartFilterType);
+    } catch (_) { }
   });
 
   /* Admin order modal */

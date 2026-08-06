@@ -19,40 +19,39 @@ function escapeHtml(str) {
 async function populateFilterOptions() {
   try {
     const [catRes, regRes] = await Promise.all([
-      apiFetch("/query/aggregate", {
-        method: "POST",
-        json:   { group_by: "category", metric: "sales", function: "count", limit: 50 },
-      }),
-      apiFetch("/query/aggregate", {
-        method: "POST",
-        json:   { group_by: "region", metric: "sales", function: "count", limit: 50 },
-      }),
+      apiFetch("/query/values/category"),
+      apiFetch("/query/values/region"),
     ]);
 
     const catSelect = document.getElementById("filter-category");
     const regSelect = document.getElementById("filter-region");
 
-    catRes.data
-      .map((r) => r.label)
-      .sort((a, b) => a.localeCompare(b))
-      .forEach((c) => {
+    if (catSelect) {
+      const prevCat = catSelect.value;
+      catSelect.innerHTML = '<option value="">All Categories</option>';
+      catRes.forEach((c) => {
         const opt = document.createElement("option");
         opt.value = c;
         opt.textContent = c;
         catSelect.appendChild(opt);
       });
+      catSelect.value = prevCat || "";
+    }
 
-    regRes.data
-      .map((r) => r.label)
-      .sort((a, b) => a.localeCompare(b))
-      .forEach((r) => {
+    if (regSelect) {
+      const prevReg = regSelect.value;
+      regSelect.innerHTML = '<option value="">All Regions</option>';
+      regRes.forEach((r) => {
         const opt = document.createElement("option");
         opt.value = r;
         opt.textContent = r;
         regSelect.appendChild(opt);
       });
+      regSelect.value = prevReg || "";
+    }
   } catch (_) { /* non-critical, silently skip */ }
 }
+
 
 /* ---- Query builder ---- */
 function buildRowsQuery() {
@@ -225,7 +224,18 @@ async function handleSubmitOrder(evt) {
     }
     closeOrderModal();
     tableState.offset = 0;
-    await loadManifestPage();
+    await Promise.all([
+      loadManifestPage(),
+      typeof loadKpis === "function" ? loadKpis() : Promise.resolve(),
+      typeof loadCharts === "function" ? loadCharts() : Promise.resolve(),
+      typeof loadRegionDonut === "function" ? loadRegionDonut() : Promise.resolve(),
+      typeof populateStateFilter === "function" ? populateStateFilter() : Promise.resolve(),
+      typeof populateCityFilter === "function" ? populateCityFilter() : Promise.resolve(),
+      typeof populateFilterOptions === "function" ? populateFilterOptions() : Promise.resolve(),
+    ]);
+    if (typeof syncFilterDropdown === "function") {
+      syncFilterDropdown(chartFilterType);
+    }
   } catch (err) {
     errorEl.textContent = err.message;
     errorEl.hidden      = false;
@@ -239,8 +249,20 @@ async function confirmDeleteOrder(orderId) {
   try {
     await apiFetch(`/orders/${orderId}`, { method: "DELETE" });
     showToast("Order deleted");
-    await loadManifestPage();
+    await Promise.all([
+      loadManifestPage(),
+      typeof loadKpis === "function" ? loadKpis() : Promise.resolve(),
+      typeof loadCharts === "function" ? loadCharts() : Promise.resolve(),
+      typeof loadRegionDonut === "function" ? loadRegionDonut() : Promise.resolve(),
+      typeof populateStateFilter === "function" ? populateStateFilter() : Promise.resolve(),
+      typeof populateCityFilter === "function" ? populateCityFilter() : Promise.resolve(),
+      typeof populateFilterOptions === "function" ? populateFilterOptions() : Promise.resolve(),
+    ]);
+    if (typeof syncFilterDropdown === "function") {
+      syncFilterDropdown(chartFilterType);
+    }
   } catch (err) {
     showToast(err.message, "error");
   }
 }
+

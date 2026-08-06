@@ -180,12 +180,10 @@ async function loadCharts() {
 /* ---- State filter dropdown (populated dynamically from API) ---- */
 async function populateStateFilter() {
   try {
-    const res = await apiFetch("/query/aggregate", {
-      method: "POST",
-      json: { group_by: "state", metric: "sales", function: "count", limit: 60 },
-    });
+    const states = await apiFetch("/query/values/state");
     const sel = document.getElementById("chart-filter-state");
-    const states = res.data.map((r) => r.label).sort((a, b) => a.localeCompare(b));
+    if (!sel) return;
+    sel.innerHTML = '<option value="">All States</option>';
     for (const s of states) {
       const opt = document.createElement("option");
       opt.value = s;
@@ -198,13 +196,11 @@ async function populateStateFilter() {
 /* ---- City filter dropdown (populated dynamically from API) ---- */
 async function populateCityFilter() {
   try {
-    const res = await apiFetch("/query/aggregate", {
-      method: "POST",
-      json: { group_by: "city", metric: "sales", function: "count", limit: 60 },
-    });
+    const cities = await apiFetch("/query/values/city");
     const sel = document.getElementById("chart-filter-city");
-    const city = res.data.map((r) => r.label).sort((a, b) => a.localeCompare(b));
-    for (const s of city) {
+    if (!sel) return;
+    sel.innerHTML = '<option value="">All Cities</option>';
+    for (const s of cities) {
       const opt = document.createElement("option");
       opt.value = s;
       opt.textContent = s;
@@ -212,3 +208,4 @@ async function populateCityFilter() {
     }
   } catch (_) { /* non-critical, silently skip */ }
 }
+

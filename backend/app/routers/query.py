@@ -143,3 +143,21 @@ async def list_rows(
 @router.get("/columns/groupable", response_model=list[GroupableColumn])
 async def list_groupable_columns() -> list[GroupableColumn]:
     return list(GroupableColumn)
+
+
+@router.get("/values/{column}", response_model=list[str], status_code=200)
+async def list_column_values(
+    column: GroupableColumn,
+    session: AsyncSession = Depends(get_session),
+) -> list[str]:
+    """Return all distinct values for a given column, sorted alphabetically."""
+    col_attr = getattr(SuperstoreSale, column.value)
+    stmt = (
+        select(col_attr)
+        .where(col_attr.is_not(None))
+        .distinct()
+        .order_by(col_attr.asc())
+    )
+    result = await session.execute(stmt)
+    return [str(val) for val in result.scalars().all() if val is not None and str(val).strip()]
+
