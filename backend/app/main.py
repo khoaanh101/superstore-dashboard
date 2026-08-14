@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -23,9 +24,18 @@ _sys_log = logging.getLogger("system")
 ROOT_DIR     = Path(__file__).resolve().parent.parent.parent
 FRONTEND_DIR = ROOT_DIR / "frontend"
 
+# ── Startup / shutdown lifecycle ────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    _sys_log.info("Application starting up — %s (debug=%s)", settings.app_name, settings.debug)
+    yield
+    _sys_log.info("Application shutting down")
+
+
 app = FastAPI(
     title=settings.app_name,
     debug=settings.debug,
+    lifespan=lifespan,
 )
 
 # ── Middleware ── order matters: CORS first, then access log
@@ -37,17 +47,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(AccessLogMiddleware)
-
-
-# ── Startup / shutdown lifecycle ────────────────────────────────────────────
-@app.on_event("startup")
-async def on_startup() -> None:
-    _sys_log.info("Application starting up — %s (debug=%s)", settings.app_name, settings.debug)
-
-
-@app.on_event("shutdown")
-async def on_shutdown() -> None:
-    _sys_log.info("Application shutting down")
 
 
 # ── Frontend files ── registered BEFORE API routers

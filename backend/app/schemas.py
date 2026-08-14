@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
 # Shared enums — whitelists that map directly to real ORM columns.
-# Using an Enum means FastAPI validates input automatically (422 on bad value)
-# and the value can never be used to build a raw/unsafe SQL fragment.
+# Automatically validates input (422 on bad value)
+# Value can never be used to build a raw/unsafe SQL fragment.
 # ---------------------------------------------------------------------------
 
 
