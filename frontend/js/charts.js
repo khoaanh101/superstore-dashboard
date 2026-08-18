@@ -31,7 +31,7 @@ let chartFilterType = "state";
 function buildChartQuery(chartType) {
   const params = new URLSearchParams({ chart_type: chartType });
   if (chartFilterType === "state" && chartFilters.state) params.set("state", chartFilters.state);
-  if (chartFilterType === "city"  && chartFilters.city)  params.set("city",  chartFilters.city);
+  if (chartFilterType === "city" && chartFilters.city) params.set("city", chartFilters.city);
   return params.toString();
 }
 
@@ -160,10 +160,10 @@ async function loadCharts() {
   const profitNeg = getCssVar("--profit-neg");  // #A32D2D
 
   const specs = [
-    { type: "sales_by_category",  canvas: "chart-sales-category",  color: accent,    xLabel: "Sales (USD)",  yLabel: "Category" },
-    { type: "sales_by_ship_mode", canvas: "chart-sales-shipmode",   color: accent,    xLabel: "Sales (USD)",  yLabel: "Ship Mode" },
+    { type: "sales_by_category", canvas: "chart-sales-category", color: accent, xLabel: "Sales (USD)", yLabel: "Category" },
+    { type: "sales_by_ship_mode", canvas: "chart-sales-shipmode", color: accent, xLabel: "Sales (USD)", yLabel: "Ship Mode" },
     { type: "profit_by_subcategory", canvas: "chart-profit-subcategory", color: null, xLabel: "Profit (USD)", yLabel: "Sub-Category" },
-    { type: "sales_by_segment",   canvas: "chart-sales-segment",    color: accent,    xLabel: "Sales (USD)",  yLabel: "Segment" },
+    { type: "sales_by_segment", canvas: "chart-sales-segment", color: accent, xLabel: "Sales (USD)", yLabel: "Segment" },
   ];
 
   await Promise.all(specs.map(async (spec) => {
@@ -208,4 +208,23 @@ async function populateCityFilter() {
     }
   } catch (_) { /* non-critical, silently skip */ }
 }
+
+/* ---- Reset all chart filters to default ---- */
+function resetChartFilters() {
+  // Reset state
+  chartFilters.state = "";
+  chartFilters.city = "";
+
+  // Sync UI — standalone dropdowns
+  const shipMode = document.getElementById("filter-ship-mode");
+  if (shipMode) shipMode.value = "";
+  const segment = document.getElementById("filter-segment");
+  if (segment) segment.value = "";
+
+  // Sync UI — location toggle back to State (default)
+  activateFilterType("state");
+
+  loadManifestPage();
+}
+
 
