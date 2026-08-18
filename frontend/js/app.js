@@ -48,9 +48,9 @@ async function loadKpis() {
 /** Rebuild the visible dropdown from the hidden source select */
 function syncFilterDropdown(type) {
   const valueSelect = document.getElementById("chart-filter-value");
-  const source      = document.getElementById(type === "state" ? "chart-filter-state" : "chart-filter-city");
+  const source = document.getElementById(type === "state" ? "chart-filter-state" : "chart-filter-city");
   const placeholder = type === "state" ? "All States" : "All Cities";
-  const prev        = chartFilters[type];
+  const prev = chartFilters[type];
 
   valueSelect.innerHTML = `<option value="">${placeholder}</option>`;
   for (const opt of source.options) {
@@ -68,7 +68,7 @@ function syncFilterDropdown(type) {
 function activateFilterType(type) {
   chartFilterType = type;
   document.getElementById("toggle-filter-state").classList.toggle("is-active", type === "state");
-  document.getElementById("toggle-filter-city").classList.toggle("is-active",  type === "city");
+  document.getElementById("toggle-filter-city").classList.toggle("is-active", type === "city");
   syncFilterDropdown(type);
 }
 
@@ -118,6 +118,10 @@ function init() {
   document.getElementById("show-login").addEventListener("click", () => showView("view-login"));
   document.getElementById("btn-logout").addEventListener("click", handleLogout);
 
+  /* Sort handlers */
+  initSortHandlers();
+  updateSortIndicators();
+
   /* Topbar Refresh */
   document.getElementById("btn-refresh").addEventListener("click", async () => {
     try {
@@ -166,23 +170,78 @@ function init() {
   });
 
   document.getElementById("btn-reset-chart-filters").addEventListener("click", () => {
-    chartFilters.state = "";
-    chartFilters.city  = "";
-    activateFilterType("state");
-    loadCharts().catch(() => { });
+    resetChartFilters();
   });
 
-  /* Table filters */
-  document.getElementById("filter-category").addEventListener("change", (e) => {
-    tableState.category = e.target.value;
+  document.getElementById("btn-reset-table-filters").addEventListener("click", () => {
+    resetTableFilters();
+  });
+
+  document.getElementById("btn-export-csv").addEventListener("click", () => {
+    exportTableCsv();
+  });
+
+  /* ── Manifest table filters ── */
+
+  // 1. ID Search (debounced)
+  document.getElementById("search-manifest").addEventListener("input", (e) => {
+    debouncedSearch(e.target.value);
+  });
+  document.getElementById("btn-clear-search").addEventListener("click", () => {
+    const input = document.getElementById("search-manifest");
+    input.value = "";
+    applySearch("");
+    input.focus();
+  });
+
+  // 2. Ship Mode
+  document.getElementById("filter-ship-mode").addEventListener("change", (e) => {
+    tableState.ship_mode = e.target.value;
     tableState.offset = 0;
     loadManifestPage();
   });
-  document.getElementById("filter-region").addEventListener("change", (e) => {
-    tableState.region = e.target.value;
+
+  // 3. Segment
+  document.getElementById("filter-segment").addEventListener("change", (e) => {
+    tableState.segment = e.target.value;
     tableState.offset = 0;
     loadManifestPage();
   });
+
+  // 4. Location grouped toggle (City / State / Region)
+  ["city", "state", "region"].forEach((type) => {
+    document.getElementById(`tbl-toggle-${type}`)?.addEventListener("click", () => {
+      if (tableState.loc_type === type) return;
+      activateTblLocType(type);
+      tableState.offset = 0;
+      loadManifestPage();
+    });
+  });
+  document.getElementById("tbl-loc-value").addEventListener("change", (e) => {
+    tableState.loc_value = e.target.value;
+    tableState.offset = 0;
+    loadManifestPage();
+  });
+
+  // 5. Category grouped toggle (Category / Sub-Category)
+  document.getElementById("tbl-toggle-category")?.addEventListener("click", () => {
+    if (tableState.cat_type === "category") return;
+    activateTblCatType("category");
+    tableState.offset = 0;
+    loadManifestPage();
+  });
+  document.getElementById("tbl-toggle-subcategory")?.addEventListener("click", () => {
+    if (tableState.cat_type === "sub_category") return;
+    activateTblCatType("sub_category");
+    tableState.offset = 0;
+    loadManifestPage();
+  });
+  document.getElementById("tbl-cat-value").addEventListener("change", (e) => {
+    tableState.cat_value = e.target.value;
+    tableState.offset = 0;
+    loadManifestPage();
+  });
+
 
   /* Pagination */
   document.getElementById("btn-first").addEventListener("click", () => {
@@ -203,6 +262,28 @@ function init() {
       Math.floor((tableState.totalRows - 1) / PAGE_SIZE) * PAGE_SIZE,
     );
     tableState.offset = lastOffset;
+    loadManifestPage();
+  });
+
+  /* ID range filter (Start from — End at) */
+  document.getElementById("id-range-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fromVal = document.getElementById("input-id-from").value.trim();
+    const toVal = document.getElementById("input-id-to").value.trim();
+    tableState.id_from = /^\d+$/.test(fromVal) ? fromVal : "";
+    tableState.id_to = /^\d+$/.test(toVal) ? toVal : "";
+    tableState.offset = 0;
+    const clearBtn = document.getElementById("btn-clear-range");
+    clearBtn.hidden = !(tableState.id_from || tableState.id_to);
+    loadManifestPage();
+  });
+  document.getElementById("btn-clear-range").addEventListener("click", () => {
+    document.getElementById("input-id-from").value = "";
+    document.getElementById("input-id-to").value = "";
+    tableState.id_from = "";
+    tableState.id_to = "";
+    tableState.offset = 0;
+    document.getElementById("btn-clear-range").hidden = true;
     loadManifestPage();
   });
 
