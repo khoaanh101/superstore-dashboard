@@ -33,6 +33,9 @@ COPY --from=builder /opt/venv /opt/venv
 # Copy application code
 COPY --chown=appuser:appuser . .
 
+# Make entrypoint executable (must be done as root, before USER switch)
+RUN chmod +x /app/scripts/entrypoint.sh
+
 # Set PATH to use venv
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -48,6 +51,8 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Expose API port
 EXPOSE 8000
 
-# Run FastAPI with uvicorn from /app/backend directory
+# Run from /app/backend so alembic.ini and app/ are on the working path
 WORKDIR /app/backend
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# entrypoint.sh runs: alembic upgrade head → uvicorn
+ENTRYPOINT ["/app/scripts/entrypoint.sh"]

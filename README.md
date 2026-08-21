@@ -136,18 +136,35 @@ superstore-dashboard/
 
 ### Option A — Docker Compose (recommended)
 
-Start the full stack (PostgreSQL + pgAdmin + FastAPI) in one command:
+#### 1. Configure environment
 
 ```bash
 cp .env.sample .env
-# Edit .env and set JWT_SECRET, then:
+```
+
+Edit `.env` and set at minimum:
+
+```env
+JWT_SECRET=your-random-secret-key
+# Generate: python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+#### 2. Start the full stack
+
+```bash
 docker compose up -d
 ```
 
-This starts:
+This builds and starts:
 - **FastAPI** on `http://localhost:8000`
 - **PostgreSQL** on port `5432`
 - **pgAdmin** on `http://localhost:5050`
+
+#### 3. Import sales data
+
+Open pgAdmin at `http://localhost:5050` and import the Superstore dataset CSV into the `superstore_sales` table.
+
+> **Note:** Database migrations run automatically on container startup via `scripts/entrypoint.sh`.
 
 ### Option B — Local Development
 
