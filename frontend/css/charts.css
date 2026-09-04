@@ -93,4 +93,24 @@
 
 @media (max-width: 760px) {
   .charts { grid-template-columns: 1fr; }
+
+  .chart-box { padding: 14px; }
+
+  .card__chart-wrap,
+  .chart-box canvas { max-height: 180px; }
+
+  /* Filter bar wraps tightly on tablet */
+  .chart-filter-bar { gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .chart-box { padding: 12px 10px; }
+
+  .card__chart-wrap,
+  .chart-box canvas { max-height: 160px; }
+
+  .chart-filter-label { width: 100%; }  /* push label to own line */
+
+  .chart-filter-bar select,
+  .filter-type-toggle { font-size: 12px; }
 }

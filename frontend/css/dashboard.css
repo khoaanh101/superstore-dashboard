@@ -78,3 +78,38 @@ header.dash-header button:hover { background: var(--surface); border-color: var(
 }
 .role-badge.role-admin  { background: #2D1A6E; color: #C4A8FF; }
 .role-badge.role-viewer { background: var(--border); color: var(--ink-soft); }
+
+/* ================================================
+   Responsive — dashboard shell
+   ================================================ */
+
+@media (max-width: 900px) {
+  #view-dashboard { padding: 24px 24px; }
+}
+
+@media (max-width: 760px) {
+  #view-dashboard { padding: 16px 16px; }
+
+  header.dash-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  header.dash-header h1 { font-size: 20px; }
+
+  header.dash-header .user-bar { gap: 10px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  #view-dashboard { padding: 12px 12px; }
+
+  header.dash-header { flex-direction: column; align-items: flex-start; }
+
+  /* Hide email text on very small screens — role badge + buttons are enough */
+  header.dash-header .user-bar #topbar-user { display: none; }
+
+  header.dash-header .user-bar { width: 100%; justify-content: flex-end; }
+
+  .brand-mark__title { font-size: 14px; }
+  .brand-mark__subtitle { font-size: 10px; }
+}

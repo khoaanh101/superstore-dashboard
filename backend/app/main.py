@@ -53,7 +53,8 @@ app.add_middleware(AccessLogMiddleware)
 @app.get("/", include_in_schema=False)
 async def root() -> FileResponse:
     """Serve the SPA entry point."""
-    return FileResponse(str(FRONTEND_DIR / "index.html"))
+    headers = {"Cache-Control": "no-cache, no-store, must-revalidate"} if settings.debug else {}
+    return FileResponse(str(FRONTEND_DIR / "index.html"), headers=headers)
 
 
 @app.get("/frontend/{path:path}", include_in_schema=False)
@@ -62,7 +63,9 @@ async def serve_frontend(path: str) -> FileResponse:
     file_path = FRONTEND_DIR / path
     if not file_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(str(file_path))
+    # In debug mode: prevent browser from caching stale CSS/JS during development.
+    headers = {"Cache-Control": "no-cache, no-store, must-revalidate"} if settings.debug else {}
+    return FileResponse(str(file_path), headers=headers)
 
 
 # ── API routers ── after static routes

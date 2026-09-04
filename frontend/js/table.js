@@ -225,17 +225,17 @@ function renderManifestRows(rows) {
     const profitClass = row.profit >= 0 ? "profit-pos" : "profit-neg";
     tr.innerHTML = `
       <td class="col-stt">${stt}</td>
-      <td>${row.id}</td>
+      <td class="col-hide-sm">${row.id}</td>
       <td>${escapeHtml(row.ship_mode)}</td>
       <td>${escapeHtml(row.segment)}</td>
       <td>${escapeHtml(row.city)}</td>
-      <td>${escapeHtml(row.state)}</td>
-      <td>${escapeHtml(row.region)}</td>
-      <td>${escapeHtml(row.category)}</td>
-      <td>${escapeHtml(row.sub_category)}</td>
+      <td class="col-hide-md">${escapeHtml(row.state)}</td>
+      <td class="col-hide-md">${escapeHtml(row.region)}</td>
+      <td class="col-hide-md">${escapeHtml(row.category)}</td>
+      <td class="col-hide-md">${escapeHtml(row.sub_category)}</td>
       <td class="num">${formatCurrency(row.sales)}</td>
-      <td class="num">${formatNumber(row.quantity)}</td>
-      <td class="num">${(row.discount * 100).toFixed(0)}%</td>
+      <td class="num col-hide-md">${formatNumber(row.quantity)}</td>
+      <td class="num col-hide-md">${(row.discount * 100).toFixed(0)}%</td>
       <td class="num ${profitClass}">${formatCurrency(row.profit)}</td>
       ${isAdmin ? `<td class="action-cell">
         <button class="btn-edit"   data-id="${row.id}" title="Edit">✏️ Edit</button>

@@ -14,115 +14,22 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 ## Dashboard
 
-[![Dashboard overview screenshot](img/dashboard-main.png)](https://github.com/khoaanh101/superstore-dashboard)
+[![Dashboard overview screenshot](imgs/dashboard.png)](https://github.com/khoaanh101/superstore-dashboard)
 
-[![Dashboard data table screenshot](img/dashboard-main_.png)](https://github.com/khoaanh101/superstore-dashboard)
-
----
-
-## Features
-
-- **JWT Authentication** — Login, Register, and Logout with access token + refresh token rotation
-- **RBAC** — `viewer` role (read-only) and `admin` role (full CRUD on orders)
-- **KPI Summary Cards** — Total Sales, Total Profit, Orders, and Profit Margin computed in a single SQL query
-- **Interactive Charts** — Sales by Category, Region, Segment, Ship Mode, State and Profit by Sub-Category (Chart.js)
-- **Filterable Charts** — Filter all charts simultaneously by Region, Category, Segment, or State
-- **Data Table (Manifest)** — Paginated, filterable, sortable table with First / Prev / Next / Last navigation and row count display
-- **CSV Export** — Export any filtered view to CSV directly from the browser
-- **Order Management** — Admin-only Create, Update, and Delete orders via modal UI
-- **Skeleton Loaders** — Animated placeholders while data is being fetched
-- **Auto Token Refresh** — Silent token refresh on 401; parallel-safe (no duplicate refresh calls)
+[![Dashboard data table screenshot](imgs/table.png)](https://github.com/khoaanh101/superstore-dashboard)
 
 ---
 
-## Tech Stack
+## Overview
 
-| Layer | Technology |
+| | |
 |---|---|
-| Backend | FastAPI, SQLAlchemy (async), Pydantic v2 |
-| Database | PostgreSQL 16, Alembic (migrations) |
-| Auth | JWT (PyJWT), bcrypt, refresh token rotation |
-| Frontend | Vanilla HTML, CSS (modular), JavaScript (ES modules) |
-| Charts | Chart.js |
-| Runtime | Python 3.12, uv |
-| Containerization | Docker, Docker Compose |
-| Backend Tests | pytest, pytest-asyncio, httpx, SQLite (in-memory) |
-| Frontend Tests | Jest, jest-environment-jsdom |
+| **Backend** | FastAPI · SQLAlchemy async · Pydantic v2 · PostgreSQL 16 · Alembic |
+| **Auth** | JWT (access + refresh token rotation) · bcrypt · RBAC (viewer / admin) |
+| **Frontend** | Vanilla HTML/CSS/JS · Chart.js · modular CSS · ES modules |
+| **Infra** | Docker · Docker Compose · pytest · SQLite in-memory tests |
 
----
-
-## Project Structure
-
-```
-superstore-dashboard/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py              # FastAPI app entry point, static file routing
-│   │   ├── config.py            # Settings loaded from .env (via pydantic-settings)
-│   │   ├── database.py          # Async SQLAlchemy engine & session
-│   │   ├── dependencies.py      # Auth dependencies (get_current_user, require_admin)
-│   │   ├── models.py            # ORM models: User, RefreshToken, SuperstoreSale
-│   │   ├── schemas.py           # Pydantic request/response schemas & enums
-│   │   ├── security.py          # JWT helpers, password hashing, token utilities
-│   │   ├── access_middleware.py # HTTP access log middleware
-│   │   ├── logging_config.py    # Structured logging setup
-│   │   └── routers/
-│   │       ├── auth.py          # /auth/register, /auth/token, /auth/refresh, /auth/logout, /auth/me
-│   │       ├── chart.py         # /chart/types, /chart — aggregated chart data
-│   │       ├── orders.py        # /orders — admin-only CRUD (POST / PUT / DELETE)
-│   │       └── query.py         # /query/summary, /query/aggregate, /query/rows, /query/rows/export
-│   ├── tests/
-│   │   ├── conftest.py          # Shared fixtures: in-memory SQLite DB, test client, seeded users
-│   │   ├── helpers.py           # Auth header helper
-│   │   ├── test_auth.py         # Integration tests for /auth/* endpoints
-│   │   ├── test_chart.py        # Integration tests for /chart/* endpoints
-│   │   ├── test_orders.py       # Integration tests for /orders/* endpoints
-│   │   ├── test_query.py        # Integration tests for /query/* endpoints
-│   │   ├── test_schemas.py      # Unit tests for Pydantic schemas
-│   │   └── test_security.py     # Unit tests for security utilities
-│   ├── migrations/              # Alembic migration versions
-│   └── alembic.ini              # Alembic configuration
-│
-├── frontend/
-│   ├── index.html               # Single-page application entry point
-│   ├── style.css                # Base CSS entry (imports modular stylesheets)
-│   ├── css/
-│   │   ├── base.css             # Design tokens, resets, typography
-│   │   ├── auth.css             # Login & register page styles
-│   │   ├── dashboard.css        # Dashboard layout & KPI cards layout
-│   │   ├── cards.css            # KPI card component styles
-│   │   ├── charts.css           # Chart container & filter bar styles
-│   │   ├── table.css            # Data table, pagination, modal styles
-│   │   └── modal.css            # Order create/edit modal styles
-│   ├── js/
-│   │   ├── app.js               # App bootstrap, view routing, auth flow
-│   │   ├── api.js               # Fetch wrapper with auto token refresh
-│   │   ├── auth.js              # Login / register / logout handlers
-│   │   ├── charts.js            # Chart.js chart rendering & filter logic
-│   │   ├── table.js             # Data table: filters, sort, pagination, CRUD
-│   │   ├── loader.js            # Skeleton loader utilities
-│   │   ├── storage.js           # LocalStorage token management
-│   │   ├── ui.js                # Shared UI helpers (toast, modal toggles)
-│   │   └── tests/
-│   │       └── storage.test.js  # Jest unit tests for storage.js
-│   ├── views/
-│   │   ├── view-login.html      # Login view partial
-│   │   ├── view-register.html   # Register view partial
-│   │   ├── view-dashboard.html  # Dashboard view partial (charts + table)
-│   │   └── modal-order.html     # Order create/edit modal partial
-│   └── assets/
-│       └── favicon.png          # Browser tab icon
-│
-├── docker-compose.yml           # Full stack: PostgreSQL + pgAdmin + FastAPI backend
-├── Dockerfile                   # Multi-stage build for the FastAPI backend
-├── .env                         # Local environment variables (gitignored)
-├── .env.sample                  # Template for required environment variables
-├── pyproject.toml               # Python project metadata and dependencies
-├── pytest.ini                   # Pytest configuration (asyncio_mode = auto)
-├── uv.lock                      # Locked Python dependency versions
-└── README.md
-```
+**Features:** JWT auth with refresh token rotation · RBAC (viewer/admin) · KPI cards · interactive + filterable charts · paginated & sortable data table · CSV export · admin order CRUD · skeleton loaders · auto token refresh
 
 ---
 
@@ -130,13 +37,9 @@ superstore-dashboard/
 
 ### Prerequisites
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) package manager
-- Docker & Docker Compose (for database)
+- [Docker](https://docs.docker.com/get-docker/) & Docker Compose
 
-### Option A — Docker Compose (recommended)
-
-#### 1. Configure environment
+### 1. Configure environment
 
 ```bash
 cp .env.sample .env
@@ -149,7 +52,7 @@ JWT_SECRET=your-random-secret-key
 # Generate: python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-#### 2. Start the full stack
+### 2. Start the full stack
 
 ```bash
 docker compose up -d
@@ -160,58 +63,11 @@ This builds and starts:
 - **PostgreSQL** on port `5432`
 - **pgAdmin** on `http://localhost:5050`
 
-#### 3. Import sales data
+### 3. Import sales data
 
 Open pgAdmin at `http://localhost:5050` and import the Superstore dataset CSV into the `superstore_sales` table.
 
 > **Note:** Database migrations run automatically on container startup via `scripts/entrypoint.sh`.
-
-### Option B — Local Development
-
-#### 1. Start the database
-
-```bash
-docker compose up -d postgres pgadmin
-```
-
-#### 2. Configure environment
-
-```bash
-cp .env.sample .env
-```
-
-Required variables:
-
-```env
-DATABASE_URL=postgresql+asyncpg://postgres:yourpassword@localhost:5432/superstore_sales
-JWT_SECRET=your-random-secret-key
-# Generate a secret: python -c "import secrets; print(secrets.token_hex(32))"
-JWT_EXPIRES_MINUTES=60
-```
-
-#### 3. Install dependencies
-
-```bash
-uv sync
-```
-
-#### 4. Run database migrations
-
-```bash
-uv run alembic -c backend/alembic.ini upgrade head
-```
-
-#### 5. Import sales data
-
-Import the Superstore dataset CSV into the `superstore_sales` table using pgAdmin (`http://localhost:5050`) or `psql`.
-
-#### 6. Start the development server
-
-```bash
-uv run fastapi dev backend/app/main.py
-```
-
-Open `http://localhost:8000` in your browser.
 
 ---
 
@@ -235,14 +91,6 @@ uv run pytest backend/tests/test_orders.py -v
 uv run pytest backend/tests/test_query.py -v
 uv run pytest backend/tests/test_schemas.py -v
 uv run pytest backend/tests/test_security.py -v
-```
-
-### Frontend (Jest)
-
-```bash
-cd frontend
-npm install
-npm test
 ```
 
 ---
@@ -269,10 +117,10 @@ Sign up for a free account at [ngrok.com](https://dashboard.ngrok.com/signup), t
 ngrok config add-authtoken <YOUR_AUTHTOKEN>
 ```
 
-### 3. Start the FastAPI server
+### 3. Start the full stack
 
 ```bash
-uv run fastapi dev backend/app/main.py
+docker compose up -d
 ```
 
 ### 4. Open a tunnel in another terminal
@@ -293,29 +141,7 @@ Share that URL with anyone — they can access your dashboard without needing yo
 
 ---
 
-## API Overview
-
-All endpoints except `/auth/*` and `/health` require a `Bearer` token in the `Authorization` header.
-
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/auth/register` | — | Create a new user account |
-| `POST` | `/auth/token` | — | Login — returns access + refresh tokens |
-| `POST` | `/auth/refresh` | — | Exchange a refresh token for a new pair |
-| `POST` | `/auth/logout` | — | Revoke the refresh token |
-| `GET` | `/auth/me` | viewer+ | Return the current user's profile |
-| `GET` | `/chart/types` | viewer+ | List all available chart types |
-| `GET` | `/chart` | viewer+ | Aggregated chart data with optional filters |
-| `GET` | `/query/summary` | viewer+ | KPI totals (sales, profit, order count) |
-| `GET` | `/query/rows` | viewer+ | Paginated, filterable, sortable sales rows |
-| `GET` | `/query/rows/export` | viewer+ | Export filtered rows as CSV |
-| `POST` | `/query/aggregate` | viewer+ | Generic GROUP BY aggregation |
-| `GET` | `/query/columns/groupable` | viewer+ | List groupable column names |
-| `GET` | `/query/values/{column}` | viewer+ | Distinct sorted values for a column |
-| `POST` | `/orders` | admin | Create a new sale order |
-| `PUT` | `/orders/{id}` | admin | Partially update an order |
-| `DELETE` | `/orders/{id}` | admin | Delete an order |
-| `GET` | `/health` | — | Health check |
+## Interactive API Documentation
 
 Full interactive docs available at `http://localhost:8000/docs`.
 
