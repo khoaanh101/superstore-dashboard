@@ -8,7 +8,7 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 ## Dashboard Login
 
-[![Dashboard login screenshot](img/login.png)](https://github.com/khoaanh101/superstore-dashboard)
+[![Dashboard login screenshot](imgs/login.png)](https://github.com/khoaanh101/superstore-dashboard)
 
 ---
 
