@@ -1,0 +1,62 @@
+/* ================================================
+   auth.css — Login & Register views
+   ================================================ */
+
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.login-view .brand-panel {
+  background: var(--ink);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px;
+}
+
+.login-view .brand-panel h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+
+.login-view .brand-panel p {
+  color: #B9BCC2;
+  font-size: 15px;
+  max-width: 320px;
+}
+
+.form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+#login-form, #register-form {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#login-form h2, #register-form h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.switch-link { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.switch-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.switch-link a:hover { text-decoration: underline; }
+
+@media (max-width: 760px) {
+  .login-view { grid-template-columns: 1fr; }
+  .login-view .brand-panel { display: none; }
+}

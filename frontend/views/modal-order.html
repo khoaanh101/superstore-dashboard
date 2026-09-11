@@ -1,0 +1,59 @@
+<!-- ============ ORDER MODAL (admin only) ============ -->
+<div id="toast" class="toast" hidden></div>
+
+<div id="order-modal-overlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Order</h3>
+      <button id="btn-close-modal" class="btn-ghost btn-icon" aria-label="Close">✕</button>
+    </div>
+    <form id="order-form" class="order-form">
+      <div class="form-grid">
+        <label>Ship Mode
+          <input id="of-ship-mode" type="text" placeholder="e.g. Second Class" required />
+        </label>
+        <label>Segment
+          <input id="of-segment" type="text" placeholder="e.g. Consumer" required />
+        </label>
+        <label>Country
+          <input id="of-country" type="text" placeholder="e.g. United States" required />
+        </label>
+        <label>City
+          <input id="of-city" type="text" placeholder="e.g. Los Angeles" required />
+        </label>
+        <label>State
+          <input id="of-state" type="text" placeholder="e.g. California" required />
+        </label>
+        <label>Postal Code
+          <input id="of-postal-code" type="text" placeholder="Optional" />
+        </label>
+        <label>Region
+          <input id="of-region" type="text" placeholder="e.g. West" required />
+        </label>
+        <label>Category
+          <input id="of-category" type="text" placeholder="e.g. Technology" required />
+        </label>
+        <label>Sub-Category
+          <input id="of-sub-category" type="text" placeholder="e.g. Phones" required />
+        </label>
+        <label>Sales (USD)
+          <input id="of-sales" type="number" step="0.01" min="0" placeholder="0.00" required />
+        </label>
+        <label>Quantity
+          <input id="of-quantity" type="number" min="1" placeholder="1" required />
+        </label>
+        <label>Discount (0–1)
+          <input id="of-discount" type="number" step="0.01" min="0" max="1" placeholder="0.00" required />
+        </label>
+        <label>Profit (USD)
+          <input id="of-profit" type="number" step="0.01" placeholder="0.00" required />
+        </label>
+      </div>
+      <p class="error" id="modal-error" hidden></p>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-modal" class="btn-ghost">Cancel</button>
+        <button type="submit" id="btn-submit-order">Save Order</button>
+      </div>
+    </form>
+  </div>
+</div>

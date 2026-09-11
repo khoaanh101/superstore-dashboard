@@ -1,6 +1,6 @@
 # Superstore Sales Dashboard
 
-A full-stack web dashboard for analyzing superstore sales data — featuring authentication, interactive charts, and a filterable data table.
+A full-stack web dashboard for analyzing superstore sales data — featuring authentication, interactive charts, a filterable data table, and admin order management.
 
 Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed by **PostgreSQL**.
 
@@ -14,145 +14,84 @@ Built with **FastAPI** (backend) and **vanilla HTML/CSS/JS** (frontend), backed 
 
 ## Dashboard
 
-[![Dashboard overview screenshot](img/dashboard-main.png)](https://github.com/khoaanh101/superstore-dashboard)
+[![Dashboard overview screenshot](imgs/dashboard.png)](https://github.com/khoaanh101/superstore-dashboard)
 
-[![Dashboard data table screenshot](img/dashboard-main_.png)](https://github.com/khoaanh101/superstore-dashboard)
-
----
-
-## Features
-
-- **JWT Authentication** — Login, Register, and Logout with access token + refresh token rotation
-- **KPI Summary Cards** — Total Sales, Total Profit, Orders, and Profit Margin computed in a single SQL query
-- **Interactive Charts** — Sales by Category, Region, Segment, and Profit by Sub-Category (Chart.js)
-- **Filterable Charts** — Filter all charts simultaneously by Region, Category, or State
-- **Data Table (Manifest)** — Paginated, filterable table with First / Prev / Next / Last navigation and row count display
-- **Skeleton Loaders** — Animated placeholders while data is being fetched
-- **Auto Token Refresh** — Silent token refresh on 401; parallel-safe (no duplicate refresh calls)
+[![Dashboard data table screenshot](imgs/table.png)](https://github.com/khoaanh101/superstore-dashboard)
 
 ---
 
-## Tech Stack
+## Overview
 
-| Layer | Technology |
+| | |
 |---|---|
-| Backend | FastAPI, SQLAlchemy (async), Pydantic v2 |
-| Database | PostgreSQL, Alembic (migrations) |
-| Auth | JWT (PyJWT), bcrypt, refresh token rotation |
-| Frontend | Vanilla HTML, CSS, JavaScript |
-| Charts | Chart.js |
-| Runtime | Python 3.12, uv |
+| **Backend** | FastAPI · SQLAlchemy async · Pydantic v2 · PostgreSQL 16 · Alembic |
+| **Auth** | JWT (access + refresh token rotation) · bcrypt · RBAC (viewer / admin) |
+| **Frontend** | Vanilla HTML/CSS/JS · Chart.js · modular CSS · ES modules |
+| **Infra** | Docker · Docker Compose · pytest · SQLite in-memory tests |
 
----
-
-## Project Structure
-
-```
-superstore-dashboard/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py          # FastAPI app entry point, static file routing
-│   │   ├── config.py        # Settings loaded from .env
-│   │   ├── database.py      # Async SQLAlchemy engine & session
-│   │   ├── dependencies.py  # Auth dependency (get_current_user)
-│   │   ├── models.py        # ORM models: User, RefreshToken, SuperstoreSale
-│   │   ├── schemas.py       # Pydantic request/response schemas
-│   │   ├── security.py      # JWT helpers, password hashing
-│   │   └── routers/
-│   │       ├── auth.py      # /auth/token, /auth/register, /auth/refresh, /auth/logout
-│   │       ├── chart.py     # /chart — chart data aggregations
-│   │       └── query.py     # /query/summary, /query/aggregate, /query/rows
-│   ├── migrations/          # Alembic migration versions
-│   └── alembic.ini          # Alembic configuration
-│
-├── frontend/
-│   ├── index.html           # Single-page application entry point
-│   ├── style.css            # Design system, layout, components
-│   ├── app.js               # All frontend logic (auth, charts, table, API layer)
-│   └── assets/
-│       └── favicon.png      # Browser tab icon
-│
-├── postgre_env/
-│   └── compose.yml          # Docker Compose for PostgreSQL + pgAdmin
-│
-├── .env                     # Local environment variables (gitignored)
-├── .env.sample              # Template for required environment variables
-├── pyproject.toml           # Python project metadata and dependencies
-├── uv.lock                  # Locked dependency versions
-└── README.md
-```
+**Features:** JWT auth with refresh token rotation · RBAC (viewer/admin) · KPI cards · interactive + filterable charts · paginated & sortable data table · CSV export · admin order CRUD · skeleton loaders · auto token refresh
 
 ---
 
 ## Getting Started
 
-### 1. Prerequisites
+### Prerequisites
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) package manager
-- PostgreSQL (or Docker for the included Compose setup)
+- [Docker](https://docs.docker.com/get-docker/) & Docker Compose
 
-### 2. Start the database
-
-```bash
-cd postgre_env
-docker compose up -d
-```
-
-This starts PostgreSQL on port `5432` and pgAdmin on port `5050`.
-
-### 3. Configure environment
-
-Copy the sample file and fill in your values:
+### 1. Configure environment
 
 ```bash
 cp .env.sample .env
 ```
 
-Required variables:
+Edit `.env` and set at minimum:
 
 ```env
-DATABASE_URL=postgresql+asyncpg://postgres:yourpassword@localhost:5432/superstore_sales
-JWT_SECRET=your-random-secret-key        # generate: python -c "import secrets; print(secrets.token_hex(32))"
-JWT_EXPIRES_MINUTES=60
+JWT_SECRET=your-random-secret-key
+# Generate: python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-### 4. Install dependencies
+### 2. Start the full stack
 
 ```bash
-uv sync
+docker compose up -d
 ```
 
-### 5. Run database migrations
+This builds and starts:
+- **FastAPI** on `http://localhost:8000`
+- **PostgreSQL** on port `5432`
+- **pgAdmin** on `http://localhost:5050`
+
+### 3. Import sales data
+
+Open pgAdmin at `http://localhost:5050` and import the Superstore dataset CSV into the `superstore_sales` table.
+
+> **Note:** Database migrations run automatically on container startup via `scripts/entrypoint.sh`.
+
+---
+
+## Running Tests
+
+### Backend (pytest)
+
+Tests run on an in-memory SQLite database — no PostgreSQL required.
 
 ```bash
-uv run alembic -c backend/alembic.ini upgrade head
+# Run all backend tests
+uv run pytest
+
+# Run with verbose output
+uv run pytest -v
+
+# Run a specific test file
+uv run pytest backend/tests/test_auth.py -v
+uv run pytest backend/tests/test_chart.py -v
+uv run pytest backend/tests/test_orders.py -v
+uv run pytest backend/tests/test_query.py -v
+uv run pytest backend/tests/test_schemas.py -v
+uv run pytest backend/tests/test_security.py -v
 ```
-
-### 6. Import sales data
-
-Import the Superstore dataset CSV into the `superstore_sales` table using pgAdmin (`http://localhost:5050`) or `psql`.
-
-### 7. Start the development server
-
-First, activate the virtual environment:
-
-```bash
-# Windows
-.venv\Scripts\activate
-
-# macOS / Linux
-source .venv/bin/activate
-```
-
-Then start the server:
-
-```bash
-fastapi dev backend/app/main.py
-```
-
-Open `http://localhost:8000` in your browser.
 
 ---
 
@@ -161,8 +100,6 @@ Open `http://localhost:8000` in your browser.
 [ngrok](https://ngrok.com/) lets you share your local server over the internet — without deploying or exposing any secret keys.
 
 ### 1. Install ngrok
-
-Download from [https://ngrok.com/download](https://ngrok.com/download) and follow the OS-specific install instructions, **or** install via package manager:
 
 ```bash
 # Windows (winget)
@@ -180,12 +117,10 @@ Sign up for a free account at [ngrok.com](https://dashboard.ngrok.com/signup), t
 ngrok config add-authtoken <YOUR_AUTHTOKEN>
 ```
 
-### 3. Start the FastAPI server
-
-In one terminal:
+### 3. Start the full stack
 
 ```bash
-uv run fastapi dev backend/app/main.py
+docker compose up -d
 ```
 
 ### 4. Open a tunnel in another terminal
@@ -206,19 +141,7 @@ Share that URL with anyone — they can access your dashboard without needing yo
 
 ---
 
-## API Overview
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/auth/register` | Create a new user account |
-| `POST` | `/auth/token` | Login — returns access + refresh tokens |
-| `POST` | `/auth/refresh` | Exchange a refresh token for a new pair |
-| `POST` | `/auth/logout` | Revoke the refresh token |
-| `GET` | `/query/summary` | KPI totals (sales, profit, order count) |
-| `GET` | `/query/rows` | Paginated sales rows with optional filters |
-| `POST` | `/query/aggregate` | Generic GROUP BY aggregation |
-| `GET` | `/chart` | Chart data for a specific chart type |
-| `GET` | `/health` | Health check |
+## Interactive API Documentation
 
 Full interactive docs available at `http://localhost:8000/docs`.
 
@@ -228,10 +151,22 @@ Full interactive docs available at `http://localhost:8000/docs`.
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `DATABASE_URL` | ✅ | — | Async PostgreSQL connection string |
+| `DATABASE_URL` | ✅ | — | Async PostgreSQL connection string (`postgresql+asyncpg://...`) |
 | `JWT_SECRET` | ✅ | — | Secret key for signing JWTs |
 | `JWT_ALGORITHM` | ❌ | `HS256` | JWT signing algorithm |
-| `JWT_EXPIRES_MINUTES` | ❌ | `60` | Access token lifetime |
-| `REFRESH_TOKEN_EXPIRES_DAYS` | ❌ | `7` | Refresh token lifetime |
-| `CORS_ORIGINS` | ❌ | `*` | Comma-separated allowed origins |
+| `JWT_EXPIRES_MINUTES` | ❌ | `60` | Access token lifetime (minutes) |
+| `REFRESH_TOKEN_EXPIRES_DAYS` | ❌ | `7` | Refresh token lifetime (days) |
+| `CORS_ORIGINS` | ❌ | `*` | Comma-separated allowed CORS origins |
 | `DEBUG` | ❌ | `false` | Enable FastAPI debug mode |
+| `PG_USER` | ❌ | `postgres` | PostgreSQL user (Docker Compose) |
+| `PG_PASSWORD` | ❌ | `yourpassword` | PostgreSQL password (Docker Compose) |
+| `PG_DATABASE` | ❌ | `superstore_sales` | PostgreSQL database name (Docker Compose) |
+| `PG_PORT` | ❌ | `5432` | PostgreSQL exposed port (Docker Compose) |
+| `PGADMIN_EMAIL` | ❌ | `demo@example.com` | pgAdmin login email (Docker Compose) |
+| `PGADMIN_PASSWORD` | ❌ | `secret` | pgAdmin login password (Docker Compose) |
+
+---
+
+## License
+
+This project is licensed under the terms of the MIT license.

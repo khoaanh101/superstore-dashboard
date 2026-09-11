@@ -5,193 +5,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Superstore Sales Dashboard</title>
+  <meta name="description" content="Interactive sales dashboard for Superstore dataset — revenue, profit and customer segments." />
   <link rel="icon" type="image/png" href="/frontend/assets/favicon.png" />
-  <link rel="stylesheet" href="/frontend/style.css" />
+  <!-- CSS modules loaded directly (no @import) for parallel fetching and cache transparency -->
+  <link rel="stylesheet" href="/frontend/css/base.css" />
+  <link rel="stylesheet" href="/frontend/css/auth.css" />
+  <link rel="stylesheet" href="/frontend/css/dashboard.css" />
+  <link rel="stylesheet" href="/frontend/css/cards.css" />
+  <link rel="stylesheet" href="/frontend/css/charts.css" />
+  <link rel="stylesheet" href="/frontend/css/table.css" />
+  <link rel="stylesheet" href="/frontend/css/modal.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 
 <body>
 
-  <!-- ============ LOGIN VIEW ============ -->
-  <section id="view-login" class="view login-view">
-    <div class="brand-panel">
-      <h1>Superstore<br />Sales Dashboard</h1>
-      <p>Revenue, Profit and Customer Class — Collected from Sales Data.</p>
-    </div>
-
-    <div class="form-panel">
-      <form id="login-form">
-        <h2>Log in</h2>
-        <input type="email" id="login-email" placeholder="example@email.com" autocomplete="email" required />
-        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required />
-        <p class="error" id="login-error" hidden></p>
-        <button type="submit" id="login-submit">Log in</button>
-        <p class="switch-link">Haven't created an account? <a href="#" id="show-register">Register</a></p>
-      </form>
-    </div>
-  </section>
-
-  <!-- ============ REGISTER VIEW ============ -->
-  <section id="view-register" class="view login-view" hidden>
-    <div class="brand-panel">
-      <h1>Superstore<br />Sales Dashboard</h1>
-      <p>Revenue, Profit and Customer Class — Collected from Sales Data.</p>
-    </div>
-
-    <div class="form-panel">
-      <form id="register-form">
-        <h2>Register</h2>
-        <input type="email" id="register-email" placeholder="example@email.com" autocomplete="email" required />
-        <input type="password" id="register-password" placeholder="Password (min 8 characters)"
-          autocomplete="new-password" required minlength="8" />
-        <p class="error" id="register-error" hidden></p>
-        <p class="success" id="register-success" hidden></p>
-        <button type="submit" id="register-submit">Register</button>
-        <p class="switch-link">Already have an account? <a href="#" id="show-login">Log in</a></p>
-      </form>
-    </div>
-  </section>
-
-  <!-- ============ DASHBOARD VIEW ============ -->
-  <section id="view-dashboard" class="view" hidden>
-    <header class="dash-header">
-      <div class="brand-mark">
-        <img src="/frontend/assets/favicon.png" alt="Superstore logo" class="brand-mark__icon" />
-        <div>
-          <p class="brand-mark__title">Superstore</p>
-          <p class="brand-mark__subtitle">Sales Dashboard</p>
-        </div>
-      </div>
-      <div class="user-bar">
-        <span id="topbar-user"></span>
-        <button id="btn-refresh" class="btn-ghost">Refresh</button>
-        <button id="btn-logout">Log out</button>
-      </div>
-    </header>
-
-    <main class="dash-body">
-
-      <section class="cards" id="summary-cards">
-        <div class="card">
-          <p class="card-label">Total Sales</p>
-          <p class="card-value" id="kpi-sales">—</p>
-        </div>
-        <div class="card">
-          <p class="card-label">Total Profit</p>
-          <p class="card-value" id="kpi-profit">—</p>
-        </div>
-        <div class="card">
-          <p class="card-label">Orders</p>
-          <p class="card-value" id="kpi-orders">—</p>
-        </div>
-        <div class="card">
-          <p class="card-label">Profit Margin</p>
-          <p class="card-value" id="kpi-margin">—</p>
-        </div>
-      </section>
-
-      <!-- Chart filters -->
-      <div class="chart-filter-bar">
-        <span class="chart-filter-label">Filter charts:</span>
-        <select id="chart-filter-region">
-          <option value="">All Regions</option>
-          <option value="Central">Central</option>
-          <option value="East">East</option>
-          <option value="South">South</option>
-          <option value="West">West</option>
-        </select>
-        <select id="chart-filter-category">
-          <option value="">All Categories</option>
-          <option value="Furniture">Furniture</option>
-          <option value="Office Supplies">Office Supplies</option>
-          <option value="Technology">Technology</option>
-        </select>
-        <select id="chart-filter-state">
-          <option value="">All States</option>
-        </select>
-        <button type="button" id="btn-reset-chart-filters" class="btn-ghost btn-sm">&#x21BA; Reset</button>
-      </div>
-
-      <section class="charts">
-        <div class="chart-box">
-          <p class="chart-title">Sales by Category</p>
-          <canvas id="chart-sales-category"></canvas>
-        </div>
-        <div class="chart-box">
-          <p class="chart-title">Sales by Region</p>
-          <canvas id="chart-sales-region"></canvas>
-        </div>
-        <div class="chart-box">
-          <p class="chart-title">Sales by Segment</p>
-          <canvas id="chart-sales-segment"></canvas>
-        </div>
-        <div class="chart-box">
-          <p class="chart-title">Profit by Sub-Category</p>
-          <canvas id="chart-profit-subcategory"></canvas>
-        </div>
-      </section>
-
-      <section class="card table-card">
-        <div class="table-card-header">
-          <h2>Manifest</h2>
-          <div class="filters">
-            <select id="filter-category">
-              <option value="">All Categories</option>
-            </select>
-            <select id="filter-region">
-              <option value="">All Regions</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table class="manifest">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Ship Mode</th>
-                <th>Segment</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Region</th>
-                <th>Category</th>
-                <th>Sub-Category</th>
-                <th class="num">Sales</th>
-                <th class="num">Qty</th>
-                <th class="num">Discount</th>
-                <th class="num">Profit</th>
-              </tr>
-            </thead>
-            <tbody id="manifest-body">
-              <tr>
-                <td colspan="12" class="empty-row">Loading…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="table-card-footer">
-          <span id="page-indicator" class="page-indicator"></span>
-          <div class="pager">
-            <button type="button" id="btn-first" title="First page">⇤ First</button>
-            <button type="button" id="btn-prev">← Prev</button>
-            <button type="button" id="btn-next">Next →</button>
-            <button type="button" id="btn-last" title="Last page">Last ⇥</button>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </section>
-
-  <div id="toast" class="toast" hidden></div>
+  <!-- Views are injected here by loader.js before the app boots -->
+  <div id="app-root"></div>
 
   <script>
     // API_BASE_URL automatically follows whatever host/IP the browser used
     // to load this page — works for localhost, LAN, or a public domain.
     const API_BASE_URL = window.location.origin;
   </script>
-  <script src="/frontend/app.js"></script>
+
+  <!-- Load order reflects dependency chain: each module only uses globals defined above it -->
+  <script src="/frontend/js/storage.js"></script>
+  <script src="/frontend/js/api.js"></script>
+  <script src="/frontend/js/ui.js"></script>
+  <script src="/frontend/js/auth.js"></script>
+  <script src="/frontend/js/charts.js"></script>
+  <script src="/frontend/js/table.js"></script>
+  <script src="/frontend/js/loader.js"></script>
+  <script src="/frontend/js/app.js"></script>
+
 </body>
 
 </html>

@@ -1,0 +1,226 @@
+<!-- ============ DASHBOARD VIEW ============ -->
+<section id="view-dashboard" class="view" hidden>
+  <header class="dash-header">
+    <div class="brand-mark">
+      <img src="/frontend/assets/favicon.png" alt="Superstore logo" class="brand-mark__icon" />
+      <div>
+        <p class="brand-mark__title">Superstore</p>
+        <p class="brand-mark__subtitle">Sales Dashboard</p>
+      </div>
+    </div>
+    <div class="user-bar">
+      <span id="topbar-user"></span>
+      <span id="role-badge" class="role-badge" hidden></span>
+      <button id="btn-refresh" class="btn-ghost">Refresh</button>
+      <button id="btn-logout">Log out</button>
+    </div>
+  </header>
+
+  <main class="dash-body">
+
+    <!-- KPI Cards -->
+    <section class="cards" id="summary-cards">
+      <!-- Total Sales card: enlarged with embedded donut chart -->
+      <div class="card card--sales-donut">
+        <div class="card-kpi-side">
+          <p class="card-label">Total Sales</p>
+          <p class="card-value" id="kpi-sales">—</p>
+          <p class="card-sublabel">by Region</p>
+        </div>
+        <div class="card-donut-side">
+          <canvas id="chart-region-donut"></canvas>
+        </div>
+        <ul class="donut-legend" id="donut-legend"></ul>
+      </div>
+      <div class="card">
+        <p class="card-label">Total Profit</p>
+        <p class="card-value" id="kpi-profit">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Orders</p>
+        <p class="card-value" id="kpi-orders">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Profit Margin</p>
+        <p class="card-value" id="kpi-margin">—</p>
+      </div>
+    </section>
+
+    <!-- Chart filters -->
+    <div class="chart-filter-bar">
+      <span class="chart-filter-label">Filter charts:</span>
+
+      <!-- Segmented toggle: State or City -->
+      <div class="filter-type-toggle" role="group" aria-label="Filter type">
+        <button type="button" id="toggle-filter-state" class="filter-toggle-btn is-active"
+          data-type="state">State</button>
+        <button type="button" id="toggle-filter-city" class="filter-toggle-btn" data-type="city">City</button>
+      </div>
+
+      <!-- Single dropdown — content swaps based on active toggle -->
+      <select id="chart-filter-value">
+        <option value="">All States</option>
+      </select>
+
+      <!-- Hidden data sources -->
+      <select id="chart-filter-state" hidden aria-hidden="true">
+        <option value="">All States</option>
+      </select>
+      <select id="chart-filter-city" hidden aria-hidden="true">
+        <option value="">All Cities</option>
+      </select>
+
+      <button type="button" id="btn-reset-chart-filters" class="btn-ghost btn-sm">&#x21BA; Reset</button>
+    </div>
+
+    <!-- Charts grid -->
+    <section class="charts">
+      <div class="chart-box">
+        <p class="chart-title">Sales by Category</p>
+        <canvas id="chart-sales-category"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Sales by Ship Mode</p>
+        <canvas id="chart-sales-shipmode"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Sales by Segment</p>
+        <canvas id="chart-sales-segment"></canvas>
+      </div>
+      <div class="chart-box">
+        <p class="chart-title">Profit by Sub-Category</p>
+        <canvas id="chart-profit-subcategory"></canvas>
+      </div>
+    </section>
+
+    <!-- Manifest table -->
+    <section class="card table-card">
+      <div class="table-card-header">
+        <h2>Manifest</h2>
+        <div class="table-controls">
+
+          <!-- 1. ID Search -->
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="number" id="search-manifest" class="search-input search-input--id" placeholder="Search ID…"
+              autocomplete="off" min="1" />
+            <button type="button" id="btn-clear-search" class="search-clear" hidden title="Clear">✕</button>
+          </div>
+
+          <!-- 2. Ship Mode (standalone dropdown) -->
+          <select id="filter-ship-mode" class="tbl-select">
+            <option value="">All Ship Modes</option>
+          </select>
+
+          <!-- 3. Segment (standalone dropdown) -->
+          <select id="filter-segment" class="tbl-select">
+            <option value="">All Segments</option>
+          </select>
+
+          <!-- 4. Location grouped toggle: City / State / Region -->
+          <div class="tbl-filter-group">
+            <div class="filter-type-toggle" role="group" aria-label="Location filter type">
+              <button type="button" class="filter-toggle-btn is-active" id="tbl-toggle-city"
+                data-tbl-loc="city">City</button>
+              <button type="button" class="filter-toggle-btn" id="tbl-toggle-state" data-tbl-loc="state">State</button>
+              <button type="button" class="filter-toggle-btn" id="tbl-toggle-region"
+                data-tbl-loc="region">Region</button>
+            </div>
+            <select id="tbl-loc-value" class="tbl-select">
+              <option value="">All Cities</option>
+            </select>
+            <!-- Hidden data sources -->
+            <select id="tbl-loc-city" hidden aria-hidden="true">
+              <option value="">All Cities</option>
+            </select>
+            <select id="tbl-loc-state" hidden aria-hidden="true">
+              <option value="">All States</option>
+            </select>
+            <select id="tbl-loc-region" hidden aria-hidden="true">
+              <option value="">All Regions</option>
+            </select>
+          </div>
+
+          <!-- 5. Category grouped toggle: Category / Sub-Category -->
+          <div class="tbl-filter-group">
+            <div class="filter-type-toggle" role="group" aria-label="Category filter type">
+              <button type="button" class="filter-toggle-btn is-active" id="tbl-toggle-category"
+                data-tbl-cat="category">Category</button>
+              <button type="button" class="filter-toggle-btn" id="tbl-toggle-subcategory"
+                data-tbl-cat="sub_category">Sub-Cat</button>
+            </div>
+            <select id="tbl-cat-value" class="tbl-select">
+              <option value="">All Categories</option>
+            </select>
+            <!-- Hidden data sources -->
+            <select id="tbl-cat-category" hidden aria-hidden="true">
+              <option value="">All Categories</option>
+            </select>
+            <select id="tbl-cat-subcategory" hidden aria-hidden="true">
+              <option value="">All Sub-Categories</option>
+            </select>
+          </div>
+
+          <!-- Add Order button (admin only) -->
+          <button id="btn-add-order" class="btn-add-order" hidden>+ Add Order</button>
+
+          <!-- Reset all table filters -->
+          <button type="button" id="btn-reset-table-filters" class="btn-ghost btn-sm">&#x21BA; Reset</button>
+
+          <!-- Export CSV -->
+          <button type="button" id="btn-export-csv" class="btn-export-csv btn-sm">&#x2193; Export CSV</button>
+        </div>
+      </div>
+
+
+      <div class="table-wrap">
+        <table class="manifest">
+          <thead>
+            <tr>
+              <th class="col-stt">#</th>
+              <th class="sortable col-hide-sm" data-sort-key="id">ID <span class="sort-icon"></span></th>
+              <th class="sortable" data-sort-key="ship_mode">Ship Mode <span class="sort-icon"></span></th>
+              <th class="sortable" data-sort-key="segment">Segment <span class="sort-icon"></span></th>
+              <th class="sortable" data-sort-key="city">City <span class="sort-icon"></span></th>
+              <th class="sortable col-hide-md" data-sort-key="state">State <span class="sort-icon"></span></th>
+              <th class="sortable col-hide-md" data-sort-key="region">Region <span class="sort-icon"></span></th>
+              <th class="sortable col-hide-md" data-sort-key="category">Category <span class="sort-icon"></span></th>
+              <th class="sortable col-hide-md" data-sort-key="sub_category">Sub-Category <span class="sort-icon"></span></th>
+              <th class="sortable num" data-sort-key="sales">Sales <span class="sort-icon"></span></th>
+              <th class="sortable num col-hide-md" data-sort-key="quantity">Qty <span class="sort-icon"></span></th>
+              <th class="sortable num col-hide-md" data-sort-key="discount">Discount <span class="sort-icon"></span></th>
+              <th class="sortable num" data-sort-key="profit">Profit <span class="sort-icon"></span></th>
+              <th id="col-actions" class="col-actions" hidden>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="manifest-body">
+            <tr>
+              <td colspan="13" class="empty-row">Loading…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-card-footer">
+        <span id="page-indicator" class="page-indicator"></span>
+        <div class="pager">
+          <button type="button" id="btn-first" title="First page">⇤ First</button>
+          <button type="button" id="btn-prev">← Prev</button>
+          <form id="id-range-form" class="id-range" novalidate>
+            <input type="number" id="input-id-from" class="id-range__input" min="1" placeholder="Start from"
+              autocomplete="off" title="start id" />
+            <span class="id-range__sep">—</span>
+            <input type="number" id="input-id-to" class="id-range__input" min="1" placeholder="End at"
+              autocomplete="off" title="end id" />
+            <button type="submit" class="id-range__go">Go</button>
+            <button type="button" id="btn-clear-range" class="id-range__clear" hidden
+              title="clear range filter">✕</button>
+          </form>
+          <button type="button" id="btn-next">Next →</button>
+          <button type="button" id="btn-last" title="Last page">Last ⇥</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</section>

@@ -11,6 +11,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    # RBAC: "viewer" (read-only) or "admin" (full CRUD on orders)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, default="viewer")
 
 
 class RefreshToken(Base):

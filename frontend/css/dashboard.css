@@ -1,0 +1,115 @@
+/* ================================================
+   dashboard.css — Dashboard shell: header, layout, brand mark, role badge
+   ================================================ */
+
+#view-dashboard { padding: 32px 40px; max-width: 1200px; margin: 0 auto; }
+
+/* ---- Top header ---- */
+header.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+header.dash-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  margin: 0;
+}
+
+header.dash-header .user-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+header.dash-header button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+header.dash-header button:hover { background: var(--surface); border-color: var(--ink-soft); }
+
+/* ---- Brand mark (topbar logo) ---- */
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.brand-mark__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.brand-mark__subtitle {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}
+
+/* ---- Role badge ---- */
+.role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.role-badge.role-admin  { background: #2D1A6E; color: #C4A8FF; }
+.role-badge.role-viewer { background: var(--border); color: var(--ink-soft); }
+
+/* ================================================
+   Responsive — dashboard shell
+   ================================================ */
+
+@media (max-width: 900px) {
+  #view-dashboard { padding: 24px 24px; }
+}
+
+@media (max-width: 760px) {
+  #view-dashboard { padding: 16px 16px; }
+
+  header.dash-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  header.dash-header h1 { font-size: 20px; }
+
+  header.dash-header .user-bar { gap: 10px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  #view-dashboard { padding: 12px 12px; }
+
+  header.dash-header { flex-direction: column; align-items: flex-start; }
+
+  /* Hide email text on very small screens — role badge + buttons are enough */
+  header.dash-header .user-bar #topbar-user { display: none; }
+
+  header.dash-header .user-bar { width: 100%; justify-content: flex-end; }
+
+  .brand-mark__title { font-size: 14px; }
+  .brand-mark__subtitle { font-size: 10px; }
+}

@@ -1,0 +1,432 @@
+/* ================================================
+   table.css — Manifest table, filters, pagination, action buttons
+   ================================================ */
+
+/* ---- Table card shell ---- */
+.table-card { padding: 0; margin-top: 4px; }
+
+.table-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 22px 0;
+}
+
+.table-card-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* ---- Table controls row (search + filters + add-order button) ---- */
+.table-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---- Search box ---- */
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 13px;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.search-input {
+  padding: 8px 32px 8px 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  width: 220px;
+  transition: border-color 0.15s, width 0.2s;
+}
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  width: 270px;
+}
+/* ID search — narrower, number input */
+.search-input--id {
+  width: 110px;
+}
+.search-input--id:focus { width: 140px; }
+/* Remove spinner arrows on number input */
+.search-input--id::-webkit-outer-spin-button,
+.search-input--id::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.search-input--id { -moz-appearance: textfield; appearance: textfield; }
+
+/* Remove the native ✕ added by type="search" in Chrome — we supply our own */
+.search-input::-webkit-search-cancel-button { display: none; }
+
+.search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-clear:hover { color: var(--ink); background: var(--border); }
+
+/* ---- Standalone table filter select ---- */
+.tbl-select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.tbl-select:focus { outline: none; border-color: var(--accent); }
+
+/* ---- Grouped filter (toggle pill + value dropdown side by side) ---- */
+.tbl-filter-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- Table filters (category + region dropdowns) ---- */
+.filters { display: flex; gap: 10px; }
+
+.filters select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.filters select:focus { outline: none; border-color: var(--accent); }
+
+/* ---- Add Order button ---- */
+.btn-add-order {
+  background: var(--ink) !important;
+  color: #fff;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-add-order:hover { background: #373E53 !important; }
+
+/* ---- Export CSV button ---- */
+.btn-export-csv {
+  background: transparent;
+  color: #2f9e44;
+  border: 1px solid #2f9e44;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-export-csv:hover {
+  background: #2f9e44;
+  color: #fff;
+}
+
+/* ---- Scrollable table wrapper ---- */
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Manifest table ---- */
+.manifest {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.manifest thead th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.manifest thead th.num { text-align: right; }
+.manifest thead th.col-stt,
+.manifest td.col-stt {
+  text-align: center;
+  width: 42px;
+  min-width: 42px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* ---- Sortable column headers ---- */
+.manifest thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s, background 0.15s;
+}
+.manifest thead th.sortable:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.manifest thead th.is-sorted {
+  color: var(--accent);
+}
+.sort-icon {
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  opacity: 0.7;
+  min-width: 10px;
+}
+.manifest thead th.is-sorted .sort-icon {
+  opacity: 1;
+}
+
+
+.manifest tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.manifest tbody tr:hover { background: #FBF9F5; }
+
+/* ---- Pagination loading state — fade in-place, no layout shift ---- */
+.manifest tbody { transition: opacity 0.15s ease; }
+.manifest tbody.is-loading { opacity: 0.35; pointer-events: none; }
+
+.manifest td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.manifest td.profit-pos { color: var(--profit-pos); }
+.manifest td.profit-neg { color: var(--profit-neg); }
+
+.empty-row {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 26px 14px !important;
+}
+
+/* ---- Skeleton rows (table body) ---- */
+.skeleton-row td { background: transparent; }
+.skeleton-row .skeleton-cell {
+  display: block;
+  height: 14px;
+  background: var(--border);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  width: 80%;
+}
+
+/* ---- Action cell (Edit / Delete) ---- */
+.col-actions { text-align: center; }
+
+.manifest td.action-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn-edit, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+
+.btn-edit {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--border);
+  margin-right: 4px;
+}
+.btn-edit:hover { background: #EEF2FF; color: #3B5BDB; border-color: #3B5BDB; }
+
+.btn-delete {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--border);
+}
+.btn-delete:hover { background: #FFF0F0; color: var(--profit-neg); border-color: var(--profit-neg); }
+
+/* ---- Pagination footer ---- */
+.table-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px 20px;
+}
+
+.page-indicator { font-size: 12px; color: var(--ink-soft); }
+
+.pager { display: flex; gap: 8px; }
+
+.pager button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  padding: 8px 12px;
+  font-size: 12.5px;
+}
+.pager button:hover { background: var(--surface); border-color: var(--ink-soft); }
+.pager button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pager button:disabled:hover { background: transparent; border-color: var(--border); }
+
+/* ---- ID range filter (between Prev / Next) ---- */
+.id-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.id-range__input {
+  width: 82px;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: center;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.id-range__input:focus { outline: none; border-color: var(--accent); }
+.id-range__input::-webkit-outer-spin-button,
+.id-range__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.id-range__sep {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 0 1px;
+  user-select: none;
+}
+
+.id-range__go {
+  padding: 7px 11px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.id-range__go:hover { background: #373E53; }
+
+.id-range__clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 4px 5px;
+  border-radius: 6px;
+  line-height: 1;
+}
+.id-range__clear:hover { color: var(--ink); background: var(--border); }
+
+/* ================================================
+   Responsive — table
+   ================================================ */
+
+@media (max-width: 760px) {
+  /* Table header stacks vertically */
+  .table-card-header { flex-direction: column; align-items: flex-start; padding: 16px 16px 0; }
+
+  /* Controls wrap more tightly */
+  .table-controls { gap: 8px; }
+
+  /* Pagination footer: stack vertically */
+  .table-card-footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px 16px;
+  }
+
+  .pager { flex-wrap: wrap; justify-content: center; gap: 6px; }
+
+  .pager button { padding: 8px 10px; font-size: 12px; }
+
+  /* Slim down the table padding */
+  .manifest thead th,
+  .manifest tbody td { padding: 8px 10px; }
+
+  /* ---- Responsive column hiding ---- */
+  /* col-hide-md: hidden on tablet and below (≤ 760px) */
+  .col-hide-md { display: none; }
+}
+
+@media (max-width: 540px) {
+  /* Search box: full width */
+  .search-input { width: 100%; }
+  .search-input:focus { width: 100%; }
+  .search-box { width: 100%; }
+
+  .table-controls { width: 100%; }
+
+  /* Compress filter groups */
+  .tbl-filter-group { flex-wrap: wrap; }
+
+  /* Standalone selects fill available space */
+  .tbl-select { flex: 1; min-width: 0; }
+
+  /* Action buttons: compact row, not full-width */
+  .btn-add-order { font-size: 12px; padding: 8px 12px; }
+  .btn-export-csv { font-size: 12px; padding: 8px 12px; }
+
+  /* col-hide-sm: hidden on mobile (≤ 540px) */
+  .col-hide-sm { display: none; }
+}
+
+@media (max-width: 480px) {
+  /* Hide ID range inputs on very small screens — still usable via regular pagination */
+  #id-range-form { display: none; }
+
+  /* Compact pager */
+  .pager button { padding: 7px 9px; }
+
+  .table-card-footer { gap: 8px; padding: 10px 12px 14px; }
+}
